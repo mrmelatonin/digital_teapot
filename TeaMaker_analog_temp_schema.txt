@@ -1,0 +1,77 @@
+Tea Maker System Schematic (Arduino Uno with LCM1602C LCD)
+========================================================
+
+[Arduino Uno]
+   +5V  ----+-----------------------------------------------+---------+---------+
+            |                                               |         |         |
+            |  [10kΩ Potentiometer for LCD Contrast]        |         |         |
+            |  +------------------+                         |         |         |
+            |  |  VO             |                         |         |         |
+            |  +------------------+                         |         |         |
+            |                                               |         |         |
+            |  [LCM1602C LCD (16x2)]                       |         |         |
+            |  RS (Pin 4) ---------------- Pin 12           |         |         |
+            |  EN (Pin 6) ---------------- Pin 11           |         |         |
+            |  D4 (Pin 11) --------------- Pin 10           |         |         |
+            |  D5 (Pin 12) --------------- Pin 9            |         |         |
+            |  D6 (Pin 13) --------------- Pin 8            |         |         |
+            |  D7 (Pin 14) --------------- Pin 7            |         |         |
+            |  VSS (Pin 1) --------------- GND              |         |         |
+            |  VDD (Pin 2) --------------- 5V               |         |         |
+            |  VO (Pin 3) ----[Potentiometer Wiper]         |         |         |
+            |  A (Pin 15) ----[220Ω]------- Pin 13 (PWM)   |         |         |
+            |  K (Pin 16) ---------------- GND              |         |         |
+            |                                               |         |         |
+            |  [TMP36 Temperature Sensor]                   |         |         |
+            |  VCC ----------------------- 5V               |         |         |
+            |  OUT ----------------------- Pin A0           |         |         |
+            |  GND ----------------------- GND              |         |         |
+            |                                               |         |         |
+            |  [Start Button]                               |         |         |
+            |  Pin 3 ----[Button]-------- GND              |         |         |
+            |                                               |         |         |
+            |  [Preset Button]                             |         |         |
+            |  Pin 2 ----[Button]-------- GND              |         |         |
+            |                                               |         |         |
+            |  [Blue LED]                                  |         |         |
+            |  Pin 4 ----[220Ω]----[LED+]---- GND         |         |         |
+            |                                               |         |         |
+            |  [Red LED]                                   |         |         |
+            |  Pin 5 ----[220Ω]----[LED+]---- GND         |         |         |
+            |                                               |         |         |
+            |  [Piezo Buzzer]                              |         |         |
+            |  Pin A1 ----[Buzzer+]------ GND             |         |         |
+            |                                               |         |         |
+            |  [L293D Motor Driver]                        |         |         |
+            |  IN1 (Pin 2) ---------------- Pin A2         |         |         |
+            |  IN2 (Pin 7) ---------------- Pin A3         |         |         |
+            |  EN1 (Pin 1) ---------------- Pin A4 (PWM)   |         |         |
+            |  VCC1 (Pin 8) --------------- 5V             |         |         |
+            |  VCC2 (Pin 16) -------------- 5V/External    |         |         |
+            |  GND (Pins 4,5,12,13) ------- GND           |         |         |
+            |  OUT1 (Pin 3) ----+                         |         |         |
+            |  OUT2 (Pin 6) ----|                         |         |         |
+            |                   |                         |         |         |
+            |                   |  [DC Motor]             |         |         |
+            |                   +----[Motor]----+         |         |         |
+            |                                  |         |         |         |
+            |                                  |         |         |         |
+            +----------------------------------+---------+---------+---------+
+GND -----------------------------------------------+---------+---------+---------+
+
+Notes:
+- LCM1602C:
+  - Connect a 10kΩ potentiometer between 5V and GND, with the wiper to VO (pin 3) for contrast adjustment.
+  - Backlight (pins 15/16) uses pin 13 (PWM) with a 220Ω resistor in series with the anode (A) to control brightness. Cathode (K) to GND.
+  - Adjust potentiometer if text is not visible or shows only blocks.
+- TMP36: Ensure correct orientation (flat side as per datasheet).
+- Buttons: Use internal pull-up resistors (INPUT_PULLUP in code).
+- LEDs: 220Ω resistors limit current to ~20mA.
+- L293D: VCC2 (pin 16) can connect to an external power supply (e.g., 9V) if the motor requires more voltage.
+- Motor: DC motor for tea basket movement (up/down). Ensure compatibility with L293D (e.g., 5V, <600mA).
+- Buzzer: Passive piezo buzzer, driven by tone() function.
+- Power: Ensure Arduino’s 5V can supply enough current for all components, or use an external 5V supply for L293D VCC2.
+- Troubleshooting:
+  - Verify LCD updates every 1s during steeping (e.g., "4:00 85.0C") and every 1min during cooldown (e.g., "1:00 95.0C").
+  - If updates are slow or incorrect, check Serial Monitor for temperature readings.
+  - Ensure no loose connections or power issues.
