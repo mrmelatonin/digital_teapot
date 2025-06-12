@@ -355,6 +355,7 @@ void makeBeep() {
     tone(BUZZER_PIN, BUZZER_FREQUENCY, BUZZER_DURATION);
     delay(BUZZER_PAUSE);
   }
+  analogWrite(LCD_BACKLIGHT, 128); // Set backlight to medium brightness (PWM)
 }
 
 void endProcess() {
